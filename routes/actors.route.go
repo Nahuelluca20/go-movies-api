@@ -7,10 +7,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// func (r *Router) actorsRoutes() {
-
-// }
-
 func GetActorsHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Get actors")
 }
@@ -26,5 +22,7 @@ func CreateActorHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteActorHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Delete actors")
+	id := mux.Vars(r)["id"]
+
+	fmt.Fprintf(w, "Delete actors ID: %s", id)
 }

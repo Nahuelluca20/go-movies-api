@@ -15,15 +15,16 @@ func main() {
 
 	db.DB.AutoMigrate(&models.Movie{}, &models.Actor{})
 
-	r := mux.NewRouter()
+	r := mux.NewRouter().StrictSlash(true)
 
 	r.HandleFunc("/api/v2/movies", routes.HomeHandler)
 
 	// Actors Routes
-	r.HandleFunc("/api/v2/actors", routes.GetActorsHandler).Methods("GET")
-	r.HandleFunc("/api/v2/actors/{id}", routes.GetActorByIdHandler).Methods("GET")
-	r.HandleFunc("/api/v2/actors", routes.CreateActorHandler).Methods("POST")
-	r.HandleFunc("/api/v2/actors/{id}", routes.DeleteActorHandler).Methods("GET")
+	actorsRoutes := r.PathPrefix("/api/v2/actors").Subrouter()
+	actorsRoutes.HandleFunc("/", routes.GetActorsHandler).Methods("GET")
+	actorsRoutes.HandleFunc("/{id}", routes.GetActorByIdHandler).Methods("GET")
+	actorsRoutes.HandleFunc("/{id}", routes.DeleteActorHandler).Methods("DELETE")
+	actorsRoutes.HandleFunc("/create", routes.CreateActorHandler).Methods("POST")
 
 	http.ListenAndServe(":3035", r)
 }
