@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Nahuelluca20/go-rest-api-letter-box/db"
+	"github.com/Nahuelluca20/go-rest-api-letter-box/models"
 	"github.com/Nahuelluca20/go-rest-api-letter-box/routes"
 	"github.com/gorilla/mux"
 )
@@ -11,6 +12,8 @@ import (
 func main() {
 
 	db.DBConection()
+
+	db.DB.AutoMigrate(&models.Movie{}, &models.Actor{})
 
 	r := mux.NewRouter()
 
