@@ -17,7 +17,12 @@ func main() {
 
 	r := mux.NewRouter().StrictSlash(true)
 
-	r.HandleFunc("/api/v2/movies", routes.HomeHandler)
+	// Movies Routes
+	moviesRoutes := r.PathPrefix("/api/v2/movies").Subrouter()
+	moviesRoutes.HandleFunc("/", routes.GetMoviesHandler).Methods("GET")
+	moviesRoutes.HandleFunc("/{id}", routes.GetMovieByIdHandler).Methods("GET")
+	moviesRoutes.HandleFunc("/{id}", routes.DeleteMovieHandler).Methods("DELETE")
+	moviesRoutes.HandleFunc("/create", routes.CreateMovieHandler).Methods("POST")
 
 	// Actors Routes
 	actorsRoutes := r.PathPrefix("/api/v2/actors").Subrouter()

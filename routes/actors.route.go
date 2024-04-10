@@ -47,6 +47,7 @@ func CreateActorHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Error when creating the actor"))
+		return
 	}
 
 	json.NewEncoder(w).Encode(&actor)
