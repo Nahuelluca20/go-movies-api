@@ -2,7 +2,6 @@ package routes
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/Nahuelluca20/go-rest-api-letter-box/db"
@@ -54,7 +53,21 @@ func CreateActorHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteActorHandler(w http.ResponseWriter, r *http.Request) {
+	var actor models.Actor
 	id := mux.Vars(r)["id"]
 
-	fmt.Fprintf(w, "Delete actors ID: %s", id)
+	db.DB.First(&actor, id)
+
+	if actor.ID == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Actor not found"))
+
+		return
+	} else {
+		db.DB.Unscoped().Delete(&actor, id)
+		w.WriteHeader(http.StatusAccepted)
+		w.Write([]byte("Actor are deleted"))
+
+		return
+	}
 }
