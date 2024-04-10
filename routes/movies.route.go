@@ -11,7 +11,7 @@ import (
 
 func GetMoviesHandler(w http.ResponseWriter, r *http.Request) {
 	var movies []models.Movie
-	db.DB.Find(&movies)
+	db.DB.Model(&models.Movie{}).Preload("Actors").Find(&movies)
 
 	json.NewEncoder(w).Encode(&movies)
 }
@@ -21,7 +21,7 @@ func GetMovieByIdHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := mux.Vars(r)["id"]
 
-	db.DB.First(&movie, id)
+	db.DB.Preload("Actors").First(&movie, id)
 
 	if movie.ID == 0 {
 		w.WriteHeader(http.StatusNotFound)
