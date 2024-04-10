@@ -11,18 +11,35 @@ import (
 )
 
 func GetActorsHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Get actors")
+	// []models.Actor -> Slice of actors
+	// Unlike arrays, slices are typed only by the elements they contain (not the number of elements). An uninitialized slice equals to nil and has length 0.
+	var actors []models.Actor
+	db.DB.Find(&actors)
+
+	json.NewEncoder(w).Encode(&actors)
 }
 
 func GetActorByIdHandler(w http.ResponseWriter, r *http.Request) {
+	var actor models.Actor
+
 	id := mux.Vars(r)["id"]
-	fmt.Fprintf(w, "Obtener actor con ID: %s", id)
+
+	db.DB.First(&actor, id)
+
+	if actor.ID == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Actor not found"))
+		return
+	}
+
+	json.NewEncoder(w).Encode(&actor)
 }
 
 func CreateActorHandler(w http.ResponseWriter, r *http.Request) {
 	var actor models.Actor
 
 	// &actor -> Pointer to the actor variable
+	// In Go, a pointer is a variable that holds the memory address of another variable. Instead of holding the actual value of the variable, a pointer holds the location (address) in memory where the variable is stored. This allows you to indirectly access and modify the value of the variable by dereferencing the pointer.
 	json.NewDecoder(r.Body).Decode(&actor)
 
 	createdUser := db.DB.Create(&actor)
