@@ -11,5 +11,5 @@ type Movie struct {
 	Director string  `json:"director"`
 	Desc     string  `json:"desc"`
 	Subtitle string  `json:"subtitle"`
-	Actos    []Actor `gorm:"many2many:actor_movies;"` // many to many relationship
+	Actor    []Actor `gorm:"many2many:actor_movies;"` // many to many relationship
 }

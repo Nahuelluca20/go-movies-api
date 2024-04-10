@@ -37,8 +37,8 @@ func CreateMovieHandler(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&movie)
 
-	createdUser := db.DB.Create(&movie)
-	err := createdUser.Error
+	createdMovie := db.DB.Create(&movie)
+	err := createdMovie.Error
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -60,11 +60,9 @@ func DeleteMovieHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("movie not found"))
 
 		return
-	} else {
-		db.DB.Unscoped().Delete(&movie, id)
-		w.WriteHeader(http.StatusAccepted)
-		w.Write([]byte("movie are deleted"))
-
-		return
 	}
+
+	db.DB.Unscoped().Delete(&movie, id)
+	w.WriteHeader(http.StatusNoContent)
+	w.Write([]byte("movie are deleted"))
 }

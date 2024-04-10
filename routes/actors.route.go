@@ -64,11 +64,9 @@ func DeleteActorHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Actor not found"))
 
 		return
-	} else {
-		db.DB.Unscoped().Delete(&actor, id)
-		w.WriteHeader(http.StatusAccepted)
-		w.Write([]byte("Actor are deleted"))
-
-		return
 	}
+
+	db.DB.Unscoped().Delete(&actor, id)
+	w.WriteHeader(http.StatusNoContent)
+	w.Write([]byte("Actor are deleted"))
 }
