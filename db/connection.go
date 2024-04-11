@@ -17,7 +17,9 @@ func DBConection() {
 	DNS := os.Getenv("DSN")
 
 	var err error
-	DB, err = gorm.Open(postgres.Open(DNS), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(DNS), &gorm.Config{
+		QueryFields: true,
+	})
 
 	if err != nil {
 		log.Fatal(err)
