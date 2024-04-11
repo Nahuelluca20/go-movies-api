@@ -17,24 +17,26 @@ type ActorApi struct {
 	Movies []models.Movie
 }
 
+// func GetActorsHandler(w http.ResponseWriter, r *http.Request) {
+
+// 	var actors []ActorApi
+
+// 	db.DB.Model(models.Actor{}).Preload("Movies", func(tx *gorm.DB) *gorm.DB {
+// 		return tx.Select("id", "name", "age", "movies")
+// 	}).Find(&actors)
+
+// 	json.NewEncoder(w).Encode(&actors)
+// }
+
 func GetActorsHandler(w http.ResponseWriter, r *http.Request) {
-	// []models.Actor -> Slice of actors
-	// Unlike arrays, slices are typed only by the elements they contain (not the number of elements). An uninitialized slice equals to nil and has length 0.
-	// var actors []models.Actor
-	// type name string
-
-	// var arr []string
-	// // db.DB.Preload("Movies").Find(&actors)
-	// db.DB.Model(models.Actor{}).Select("name").Find(&arr)
-
 	var actors []ActorApi
 
-	// db.DB.Preload("Movies").Model(models.Actor{}).Select("id", "name", "age", "movies").Find(&actors)
-
-	db.DB.Model(models.Actor{}).Preload("Movies", func(tx *gorm.DB) *gorm.DB {
-		return tx.Select("id", "name", "age", "movies")
+	// Cargar actores con películas seleccionando campos específicos de películas
+	db.DB.Model(&models.Actor{}).Preload("Movies", func(tx *gorm.DB) *gorm.DB {
+		return tx.Select("id", "title", "year", "director", "desc", "subtitle")
 	}).Find(&actors)
 
+	// Codificar y enviar la respuesta JSON
 	json.NewEncoder(w).Encode(&actors)
 }
 
